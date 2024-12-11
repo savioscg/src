@@ -1,0 +1,116 @@
+Produto que mais vendeu
+SELECT 
+    P.NOME AS Produto, 
+    SUM(PP.QUANTIDADE) AS QuantidadeVendida
+FROM 
+    Pedido_Produto PP
+JOIN 
+    Produto P ON PP.ID_PRODUTO = P.ID
+GROUP BY 
+    P.NOME
+ORDER BY 
+    QuantidadeVendida DESC
+LIMIT 1;
+
+Produto que menos vendeu
+SELECT 
+    P.NOME AS Produto, 
+    SUM(PP.QUANTIDADE) AS QuantidadeVendida
+FROM 
+    Pedido_Produto PP
+JOIN 
+    Produto P ON PP.ID_PRODUTO = P.ID
+GROUP BY 
+    P.NOME
+ORDER BY 
+    QuantidadeVendida ASC
+LIMIT 1;
+
+Qual mês do ano mais teve venda
+SELECT 
+    MONTH(P.data) AS Mes, 
+    COUNT(P.ID) AS TotalVendas
+FROM 
+    Pedido P
+GROUP BY 
+    MONTH(P.data)
+ORDER BY 
+    TotalVendas DESC
+LIMIT 1;
+
+Qual a forma de pagamento mais usada
+SELECT 
+    FP.TIPO_DE_PAGAMENTO AS FormaPagamento, 
+    COUNT(P.ID) AS Quantidade
+FROM 
+    Pedido P
+JOIN 
+    FormaDePagamento FP ON P.id_forma_pagamento = FP.ID
+GROUP BY 
+    FP.TIPO_DE_PAGAMENTO
+ORDER BY 
+    Quantidade DESC
+LIMIT 1;
+
+Qual o endereço que mais teve entrega
+SELECT 
+    E.RUA AS Endereco, 
+    E.CEP, 
+    COUNT(P.ID) AS TotalEntregas
+FROM 
+    Pedido P
+JOIN 
+    Endereco E ON P.ID_endereco = E.ID
+GROUP BY 
+    E.ID
+ORDER BY 
+    TotalEntregas DESC
+LIMIT 1;
+
+Qual venda teve mais produtos
+SELECT 
+    P.ID AS Pedido, 
+    COUNT(PP.ID_PRODUTO) AS TotalProdutos
+FROM 
+    Pedido_Produto PP
+JOIN 
+    Pedido P ON PP.ID_PEDIDO = P.ID
+GROUP BY 
+    P.ID
+ORDER BY 
+    TotalProdutos DESC
+LIMIT 1;
+
+Venda do mês atual por pagamento
+SELECT 
+    FP.TIPO_DE_PAGAMENTO AS FormaPagamento, 
+    COUNT(P.ID) AS TotalVendas, 
+    SUM(P.valor) AS ValorTotal
+FROM 
+    Pedido P
+JOIN 
+    FormaDePagamento FP ON P.id_forma_pagamento = FP.ID
+WHERE 
+    MONTH(P.data) = MONTH(CURRENT_DATE) 
+    AND YEAR(P.data) = YEAR(CURRENT_DATE)
+GROUP BY 
+    FP.TIPO_DE_PAGAMENTO
+ORDER BY 
+    TotalVendas DESC;
+
+Venda do mês anterior por pagamento
+SELECT 
+    FP.TIPO_DE_PAGAMENTO AS FormaPagamento, 
+    COUNT(P.ID) AS TotalVendas, 
+    SUM(P.valor) AS ValorTotal
+FROM 
+    Pedido P
+JOIN 
+    FormaDePagamento FP ON P.id_forma_pagamento = FP.ID
+WHERE 
+    MONTH(P.data) = MONTH(CURRENT_DATE) - 1 
+    AND YEAR(P.data) = YEAR(CURRENT_DATE)
+GROUP BY 
+    FP.TIPO_DE_PAGAMENTO
+ORDER BY 
+    TotalVendas DESC;
